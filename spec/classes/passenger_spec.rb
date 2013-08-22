@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'passenger' do
-  with 'passenger version' do
+  describe 'with passenger version' do
     {
       '3' => {
         :passenger_version      => '3.0.19',
