@@ -37,9 +37,9 @@ describe 'passenger' do
           end
           
           if passengerversion == 3
-            enable_rails = "RailsAutoDetect On"
+            let(:enable_rails) { "RailsAutoDetect On" }
           else
-            enable_rails = "PassengerEnabled on"
+            let(:enable_rails) { "PassengerEnabled on" }
           end
 
           it 'adds httpd config' do
@@ -62,7 +62,7 @@ describe 'passenger' do
             config = catalogue.resource('File[/etc/apache2/mods-available/passenger.conf]')[:content]
             config.should include "PassengerRuby #{params[:passenger_ruby]}"
             config.should include "PassengerRoot #{params[:passenger_root]}"
-            config.should include "#{enable_rails}"
+            config.should include "#{:enable_rails}"
             should contain_file('/etc/apache2/mods-available/passenger.load')
             load = catalogue.resource('File[/etc/apache2/mods-available/passenger.load]')[:content]
             config.should include "LoadModule passenger_module #{params[:mod_passenger_location]}"
