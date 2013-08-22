@@ -35,13 +35,20 @@ describe 'passenger' do
               :before => 'Exec[compile-passenger]'
             )
           end
+          
+          if passengerversion == 3
+            enable_rails = "RailsAutoDetect On"
+          else
+            enable_rails = "PassengerEnabled on"
+          end
 
           it 'adds httpd config' do
             config = catalogue.resource('File[/etc/httpd/conf.d/passenger.conf]')[:content]
-      
+
             config.should include "LoadModule passenger_module #{params[:mod_passenger_location]}"
             config.should include "PassengerRuby #{params[:passenger_ruby]}"
             config.should include "PassengerRoot #{params[:passenger_root]}"
+            config.should include "#{enable_rails}"
           end
         end
 
@@ -52,7 +59,13 @@ describe 'passenger' do
 
           it 'adds mods-available files' do
             should contain_file('/etc/apache2/mods-available/passenger.conf')
+            config = catalogue.resource('File[/etc/apache2/mods-available/passenger.conf]')[:content]
+            config.should include "PassengerRuby #{params[:passenger_ruby]}"
+            config.should include "PassengerRoot #{params[:passenger_root]}"
+            config.should include "#{enable_rails}"
             should contain_file('/etc/apache2/mods-available/passenger.load')
+            load = catalogue.resource('File[/etc/apache2/mods-available/passenger.load]')[:content]
+            config.should include "LoadModule passenger_module #{params[:mod_passenger_location]}"
           end
 
           it 'adds symlinks mods-enabled to load modules' do
