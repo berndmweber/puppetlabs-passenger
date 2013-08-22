@@ -1,27 +1,30 @@
 require 'spec_helper'
 
 describe 'passenger' do
+  let(:param_defaults) do
+      {
+        :passenger_ruby    => '/opt/bin/ruby',
+        :gem_path          => '/opt/lib/ruby/gems/1.9.1/gems',
+        :gem_binary_path   => '/opt/lib/ruby/bin',
+      }
+  end
   describe 'with passenger version' do
     {
       '3' => {
         :passenger_version      => '3.0.19',
-        :passenger_ruby         => '/opt/bin/ruby',
-        :gem_path               => '/opt/lib/ruby/gems/1.9.1/gems',
-        :gem_binary_path        => '/opt/lib/ruby/bin',
         :passenger_root         => '/opt/lib/ruby/gems/1.9.1/gems/passenger-3.0.19',
         :mod_passenger_location => '/opt/lib/ruby/gems/1.9.1/gems/passenger-3.0.19/ext/apache2/mod_passenger.so'
       },
       '4' => {
         :passenger_version      => '4.0.10',
-        :passenger_ruby         => '/opt/bin/ruby',
-        :gem_path               => '/opt/lib/ruby/gems/1.9.1/gems',
-        :gem_binary_path        => '/opt/lib/ruby/bin',
         :passenger_root         => '/opt/lib/ruby/gems/1.9.1/gems/passenger-4.0.10',
         :mod_passenger_location => '/opt/lib/ruby/gems/1.9.1/gems/passenger-4.0.10/buildout/apache2/mod_passenger.so'
       },
     }.each do |passengerversion, passengerparams|
       describe "when Passenger is version #{passengerversion}" do
-        :params.merge(passengerparams)
+        let :params do
+          param_defaults.merge(passengerparams)
+        end
         describe 'on RedHat' do
           let(:facts) do
             { :osfamily => 'redhat' }
