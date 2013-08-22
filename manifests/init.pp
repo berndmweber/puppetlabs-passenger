@@ -60,12 +60,6 @@ class passenger (
   include apache
   require apache::dev
 
-  if versioncmp ($passenger_version, '4.0.0') > 0 {
-    $is_version_4 = true
-  } else {
-    $is_version_4 = false
-  }
-
   case $::osfamily {
     'debian': {
       package { [$passenger::params::libruby, 'libcurl4-openssl-dev']:
